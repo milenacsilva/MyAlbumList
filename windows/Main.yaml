@@ -1,0 +1,16 @@
+widgets:
+  Main:
+    type: Window
+    widgets:
+      - Label:
+          value: "[title]MyAlbumList"
+      - Label: {}
+      - Label:
+          value: "[body]Bem vindo ao sistema!"
+      - Label: {}
+      - Button:
+          id: "loginBtn"
+          label: "Entrar"
+      - Button:
+          id: "exitBtn"
+          label: "Sair"

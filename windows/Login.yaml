@@ -1,0 +1,48 @@
+widgets:
+  Login:
+    type: Window
+    widgets:
+      - Label:
+          value: "[title]Login"
+      - Label: {}
+      - Label:
+          value: "[body]Digite suas informações para logar:"
+      - Label: {}
+      - Splitter:
+          widgets:
+            - Label:
+                value: "Usuário"
+            - InputField:
+                id: "userTxt"
+      - Label: {}
+      - Splitter:
+          widgets:
+            - Label:
+                value: "Senha"
+            - InputField:
+                id: "passTxt"
+      - Label: {}
+      - Button:
+          id: "enterBtn"
+          label: "Logar"
+      - Button:
+          id: "backLoginBtn"
+          label: "Voltar"
+  PopupSuccess:
+    type: Window
+    widgets:
+      - Label:
+          value: "Login realizado com sucesso!"
+      - Label: {}
+      - Button:
+          id: "btnSuccess"
+          label: "Prosseguir"
+  PopupError:
+    type: Window
+    widgets:
+      - Label:
+          value: "Erro no login!"
+      - Label: {}
+      - Button:
+          id: "btnError"
+          label: "Voltar"
