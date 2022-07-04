@@ -1,0 +1,14 @@
+widgets:
+  Achievement:
+    type: Window
+    widgets:
+      - Label:
+          value: "Nome..."
+          id: "lblName"
+      - Container:
+          id: "cntAchiev"
+          widgets:
+            - Label: {}
+      - Button:
+          label: "Sair"
+          id: "btnQuitAchiev"

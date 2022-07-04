@@ -14,7 +14,7 @@ class MainWindow(Window.Window):
         self.exitBtn = ptg.get_widget("exitBtn")
         self.exitBtn.onclick = lambda *_: manager.stop()
 
-    def getNamespace(self):
+    def getNamespace(self) -> ptg.Window:
         return self.namespace.Main
 
     def openLogin(self):

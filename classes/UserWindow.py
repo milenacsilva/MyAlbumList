@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from classes import Window, LoginInfo, AchievementsWindow
+from classes import Window, LoginInfo, AchievementsWindow, AlbumsWindow, AdminWindow
 import pytermgui as ptg
 from typing import Dict
 
@@ -18,7 +18,7 @@ class UserWindow(Window.Window):
                 ptg.Button(label="Área de administração", id="btnAdmin")
                 for _ in (
                     range(1)
-                    if self.loginInstance.getInfo()["administrador"]
+                    if self.loginInstance.getInfo()["eh_administrador"]
                     else []
                 )
             ],
@@ -26,7 +26,7 @@ class UserWindow(Window.Window):
                 ptg.Splitter(
                     ptg.Label("RP:"),
                     ptg.Label(
-                        f"{self.loginInstance.getInfo()['rp']}"
+                        f"{self.loginInstance.getInfo()['rockpoints']}"
                     ),
                 ),
                 ptg.Splitter(
@@ -42,17 +42,33 @@ class UserWindow(Window.Window):
                     ),
                 ),
             ),
+            ptg.Label(),
             ptg.Button(label="Meus achievements", id="btnAchievements"),
+            ptg.Button(label="Todos os álbuns", id="btnAlbums"),
+            ptg.Label(),
             ptg.Button(label="Sair", id="btnQuit"),
         )
-        self.btnQuit = ptg.get_widget("btnQuit")
+        self.btnQuit: ptg.Button = ptg.get_widget("btnQuit")
         self.btnQuit.onclick = lambda *_: self.userQuit()
-        self.btnAchievements = ptg.get_widget("btnAchievements")
+        self.btnAchievements: ptg.Button = ptg.get_widget("btnAchievements")
         self.btnAchievements.onclick = lambda *_: self.userAchiev()
+        self.btnAlbums: ptg.Button = ptg.get_widget("btnAlbums")
+        self.btnAlbums.onclick = lambda _: self.openAlbums()
+        if self.loginInstance.getInfo()["eh_administrador"]:
+            self.btnAdmin: ptg.Button = ptg.get_widget("btnAdmin")
+            self.btnAdmin.onclick = lambda _: self.openAdmin()
 
     def userQuit(self):
         self.loginInstance.logout()
         self.namespace.close()
+
+    def openAdmin(self):
+        self.manager.add(
+            AdminWindow
+            .AdminWindow(self.manager)
+            .getNamespace()
+            .center()
+        )
 
     def userAchiev(self):
         self.manager.add(
@@ -61,10 +77,16 @@ class UserWindow(Window.Window):
             .getNamespace()
             .center()
         )
-        return
 
-    def getNamespace(self) -> ptg.WidgetNamespace:
+    def getNamespace(self) -> ptg.Window:
         return self.namespace
+
+    def openAlbums(self):
+        self.manager.add(
+            AlbumsWindow.AlbumsWindow(self.manager)
+            .getNamespace()
+            .center()
+        )
 
     @property
     def buttons(self) -> Dict[str, ptg.Widget]:

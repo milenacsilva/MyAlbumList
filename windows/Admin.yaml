@@ -1,0 +1,76 @@
+widgets:
+  Admin:
+    type: Window
+    widgets:
+      - Label:
+          value: "[title]Administração"
+      - Container:
+          widgets:
+            - Button:
+                label: "Adicionar álbum"
+                id: "btnAddAlbum"
+      - Button:
+          label: "Sair"
+          id: "btnQuitAdmin"
+  AddAlbum:
+    type: Window
+    widgets:
+      - Label:
+          value: "[title]Adicionar álbum"
+      - Container:
+          widgets:
+            - Splitter:
+                widgets:
+                  - Label:
+                      value: "[body]ID:"
+                  - InputField:
+                      id: "txtId"
+            - Splitter:
+                widgets:
+                  - Label:
+                      value: "[body]Nome:"
+                  - InputField:
+                      id: "txtName"
+            - Splitter:
+                widgets:
+                  - Label:
+                      value: "[body]Capa:"
+                  - InputField:
+                      id: "txtCapa"
+            - Splitter:
+                widgets:
+                  - Label:
+                      value: "[body]Ano:"
+                  - InputField:
+                      id: "txtAno"
+            - Splitter:
+                widgets:
+                  - Label:
+                      value: "[body]Duração:"
+                  - InputField:
+                      id: "txtDuracao"
+      - Button:
+          label: "Adicionar"
+          id: "btnDoAddAlbum"
+      - Button:
+          label: "Sair"
+          id: "btnQuitAdd"
+  PopupSuccess:
+    type: Window
+    widgets:
+      - Label:
+          value: "[title]Adicionado com sucesso!"
+      - Button:
+          label: "Voltar"
+          id: "btnQuitPopup"
+  PopupError:
+    type: Window
+    widgets:
+      - Label:
+          value: "[title]Erro na adição!"
+      - Label:
+          value: "[body]Veja o log para mais informação..."
+      - Label: {}
+      - Button:
+          label: "Voltar"
+          id: "btnQuitPopup"

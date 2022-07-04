@@ -26,7 +26,7 @@ class Window(ABC):
         return namespace
 
     @abstractmethod
-    def getNamespace(self) -> ptg.WidgetNamespace:
+    def getNamespace(self) -> ptg.Window:
         pass
 
     @property

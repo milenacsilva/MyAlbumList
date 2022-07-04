@@ -11,20 +11,20 @@ class LoginInfo():
         self.db: DbHandler.DbHandler = DbHandler.DbHandler.instance()
 
         self.info: Dict[str, any] = {
-            "user": None,
+            "tag": None,
             "nome": None,
-            "perfil": None,
+            "foto_perfil": None,
             "bio": None,
             "email": None,
-            "passwrd": None,
+            "senha": None,
             "genero": None,
-            "dataNasc": None,
-            "rp": None,
+            "data_nasc": None,
+            "rockpoints": None,
             "cidade": None,
             "estado": None,
             "pais": None,
-            "critico": None,
-            "administrador": None,
+            "eh_critico": None,
+            "eh_administrador": None,
         }
         self.logged = False
 
@@ -45,13 +45,55 @@ class LoginInfo():
     def updateInfo(self) -> bool:
         if not self.logged:
             return
-        return self.login(self.info["user"], self.info["passwrd"])
+        return self.login(self.info["user"], self.info["password"])
 
     def getInfo(self) -> Union[bool, Dict[str, any]]:
         if not self.logged:
             return False
         else:
             return self.info
+
+    def updateAchievements(self):
+        achievsAlbumAdd = self.db.fetchAll(
+            """
+            SELECT Q.* FROM
+            (SELECT DISTINCT APA.NOME FROM ACHIEVEMENT_POR_ALBUM APA
+                WHERE NOT EXISTS (
+                (SELECT A.ID_ALBUM FROM ACHIEVEMENT_POR_ALBUM A WHERE A.NOME = APA.NOME)
+                EXCEPT
+                (SELECT AL.ID_ALBUM FROM ALBUM_LISTA AL WHERE AL.TAG_USUARIO = %s AND AL.N_LISTA = 1)
+            )) Q
+            EXCEPT
+            (SELECT A.NOME FROM ACHIEVEMENT_USUARIO A
+            JOIN ACHIEVEMENT_POR_ALBUM APA
+                ON APA.NOME = A.NOME AND A.TAG_USUARIO = %s);
+            """,
+            [self.info["tag"], self.info["tag"]]
+        )
+        achievsGeneroAdd = self.db.fetchAll(
+            """
+            SELECT Q.* FROM
+            (SELECT APG.NOME FROM ACHIEVEMENT_POR_GENERO APG
+                JOIN (SELECT AG.ID_GENERO AS GENERO, COUNT(AG.ID_GENERO) AS QTD FROM ALBUM_LISTA AL
+                        JOIN ALBUM_GENERO AG
+                            ON AG.ID_ALBUM = AL.ID_ALBUM
+                        WHERE AL.N_LISTA=1 AND AL.TAG_USUARIO = %s
+                        GROUP BY AG.ID_GENERO) QPG
+                ON QPG.GENERO = APG.ID_GENERO
+                WHERE QPG.QTD >= APG.QUANTIDADE) AS Q
+            EXCEPT
+            (SELECT A.NOME FROM ACHIEVEMENT_USUARIO A
+                JOIN ACHIEVEMENT_POR_GENERO APG
+                    ON APG.NOME = A.NOME AND A.TAG_USUARIO = %s);
+            """,
+            [self.info["tag"], self.info["tag"]]
+        )
+        for achiev in [*achievsAlbumAdd, *achievsGeneroAdd]:
+            self.db.execute(
+                "INSERT INTO ACHIEVEMENT_USUARIO VALUES (%s, %s);",
+                [self.info["tag"], achiev["nome"]]
+            )
+        self.db.commit()
 
     def _setInfo(self, values: Union[None, List[any]]) -> None:
         infoKeys = list(self.info.keys())
@@ -61,8 +103,7 @@ class LoginInfo():
                 self.info[key] = None
         else:
             self.logged = True
-            for key, idx in list(zip(infoKeys, range(len(values)))):
-                self.info[key] = values[idx]
+            self.info = values
 
     @classmethod
     def instance(cls):

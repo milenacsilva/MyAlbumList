@@ -3,4 +3,4 @@
 from classes import Interface
 
 if __name__ == "__main__":
-    i = Interface.Interface.instance()
+    i: Interface.Interface = Interface.Interface.instance()
