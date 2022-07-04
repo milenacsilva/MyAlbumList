@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-from classes import Window, LoginInfo, AchievementsWindow, AlbumsWindow, AdminWindow
+from classes import Window, LoginInfo,\
+    AchievementsWindow, AlbumsWindow, \
+    AdminWindow, ArtistsWindow
 import pytermgui as ptg
 from typing import Dict
 
@@ -44,6 +46,7 @@ class UserWindow(Window.Window):
             ),
             ptg.Label(),
             ptg.Button(label="Meus achievements", id="btnAchievements"),
+            ptg.Button(label="Meus artistas", id="btnArtists"),
             ptg.Button(label="Todos os álbuns", id="btnAlbums"),
             ptg.Label(),
             ptg.Button(label="Sair", id="btnQuit"),
@@ -52,6 +55,8 @@ class UserWindow(Window.Window):
         self.btnQuit.onclick = lambda *_: self.userQuit()
         self.btnAchievements: ptg.Button = ptg.get_widget("btnAchievements")
         self.btnAchievements.onclick = lambda *_: self.userAchiev()
+        self.btnArtists: ptg.Button = ptg.get_widget("btnArtists")
+        self.btnArtists.onclick = lambda *_: self.userArtists()
         self.btnAlbums: ptg.Button = ptg.get_widget("btnAlbums")
         self.btnAlbums.onclick = lambda _: self.openAlbums()
         if self.loginInstance.getInfo()["eh_administrador"]:
@@ -74,6 +79,14 @@ class UserWindow(Window.Window):
         self.manager.add(
             AchievementsWindow
             .AchievementsWindow(self.manager)
+            .getNamespace()
+            .center()
+        )
+
+    def userArtists(self):
+        self.manager.add(
+            ArtistsWindow
+            .ArtistsWindow(self.manager)
             .getNamespace()
             .center()
         )

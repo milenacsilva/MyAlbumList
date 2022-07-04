@@ -1,3 +1,4 @@
 psycopg2-binary==2.9.3
 pytermgui==6.4.0
+python-dotenv==0.20.0
 PyYAML==6.0

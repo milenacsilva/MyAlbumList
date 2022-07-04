@@ -1,5 +1,5 @@
-SELECT NULL AS "ALBUNS OUVIDOS POR USUARIO MAIS VELHO QUE A DATA DE NASCIMENTO";
-SELECT U.TAG, U.NOME, COALESCE(ALBUNS_OUVIDOS.QNT, 0) FROM USUARIO U LEFT JOIN 
+--- Álbuns ouvidos por usuário mais velho que a data de nascimento
+SELECT U.TAG, U.NOME, COALESCE(ALBUNS_OUVIDOS.QNT, 0) AS QNT FROM USUARIO U LEFT JOIN
 (SELECT U.TAG, COUNT(U.NOME) AS QNT FROM
     (SELECT * FROM LISTA_PADRAO O 
         WHERE O.OUVIDOS = TRUE) O
@@ -13,7 +13,7 @@ SELECT U.TAG, U.NOME, COALESCE(ALBUNS_OUVIDOS.QNT, 0) FROM USUARIO U LEFT JOIN
     ORDER BY U.TAG) ALBUNS_OUVIDOS ON
     U.TAG = ALBUNS_OUVIDOS.TAG;
 
-SELECT NULL AS "Álbuns ouvidos e avaliados por artista de `ocramoi`";
+--- Álbuns ouvidos e avaliados por artista de `ocramoi`
 SELECT ART.NOME, COUNT(ALBUM_OUVIDO.ID_SPOTIFY) AS QNT_ALBUNS_OUVIDOS, COUNT(ALBUM_AVALIADO.ID_ALBUM) AS QNT_ALBUNS_AVALIADOS FROM
     (SELECT * FROM LISTA_PADRAO O WHERE 
         O.TAG_USUARIO = 'ocramoi' AND O.OUVIDOS = TRUE) O
@@ -30,7 +30,7 @@ SELECT ART.NOME, COUNT(ALBUM_OUVIDO.ID_SPOTIFY) AS QNT_ALBUNS_OUVIDOS, COUNT(ALB
     GROUP BY (ART.NOME)
     ORDER BY (ART.NOME);
 
--- Quantidade de álbuns de um artista que um usuário já ouviu
+-- Quantidade de álbuns de um artista que cada usuário já ouviu
 SELECT U.TAG, A.NOME, COUNT(*) FROM 
 	USUARIO U JOIN LISTA_PADRAO L
 	    ON U.TAG = L.TAG_USUARIO AND L.OUVIDOS = TRUE
@@ -43,7 +43,7 @@ SELECT U.TAG, A.NOME, COUNT(*) FROM
 	GROUP BY U.TAG, A.ID_SPOTIFY 
 	ORDER BY U.TAG;
 
--- Quantidade de álbuns de um gênero que um usuário já ouviu
+-- Quantidade de álbuns de um gênero que cada usuário já ouviu
 SELECT U.TAG, G.NOME, COUNT(*) FROM
     USUARIO U JOIN LISTA_PADRAO L ON
         U.TAG = L.TAG_USUARIO AND L.OUVIDOS = TRUE
@@ -71,7 +71,7 @@ SELECT A.NOME, A.ID_SPOTIFY FROM
 		    JOIN ALBUM_ARTISTA AA ON
 			AA.ID_ALBUM = ALBUM_OUVIDO.ID_SPOTIFY);
 
---- achievements por album que um usuario ainda n tem
+--- Achievements por álbum que um usuário ainda não tem, mas já alcançou
 SELECT Q.* FROM 
     (SELECT DISTINCT APA.NOME FROM ACHIEVEMENT_POR_ALBUM APA
         WHERE NOT EXISTS (
@@ -84,8 +84,8 @@ SELECT Q.* FROM
     JOIN ACHIEVEMENT_POR_ALBUM APA
         ON APA.NOME = A.NOME AND A.TAG_USUARIO = 'ocramoi');
 
---- Achievements por gênero que um usuario ainda n tem
-SELECT Q.* FROM 
+--- Achievements por gênero que um usuário ainda não tem, mas já alcançou
+SELECT Q.* FROM
     (SELECT APG.NOME FROM ACHIEVEMENT_POR_GENERO APG
         JOIN (SELECT AG.ID_GENERO AS GENERO, COUNT(AG.ID_GENERO) AS QTD FROM ALBUM_LISTA AL
                 JOIN ALBUM_GENERO AG 
