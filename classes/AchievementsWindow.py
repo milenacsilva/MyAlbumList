@@ -4,7 +4,6 @@ from classes import Window, LoginInfo, DbHandler, SingleAchievementWindow
 import pytermgui as ptg
 from typing import Dict
 import urllib.parse
-import sys
 
 
 class AchievementsWindow(Window.Window):
